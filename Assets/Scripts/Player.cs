@@ -7,7 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public ArcanePad Pad { get; private set; }
-    public Transform pointer;
+    public RectTransform pointer;
 
     public void Initialize(ArcanePad pad)
     {
@@ -27,8 +27,12 @@ public class Player : MonoBehaviour
         Pad.StartGetQuaternion();
         Pad.OnGetQuaternion(new Action<GetQuaternionEvent>(RotatePlayer));
 
+        GameObject pointerObject = GameObject.Find("Pointer");
+        pointer = pointerObject.GetComponent<RectTransform>();
+
         Pad.StartGetPointer();
-        Pad.OnGetPointer((GetPointerEvent e) => Debug.Log(e.x + " | " + e.y));
+        Pad.OnGetPointer(new Action<GetPointerEvent>(MovePointer));                 // FUNCTION
+        // Pad.OnGetPointer((GetPointerEvent e) => Debug.Log(e.x + " | " + e.y));   // LAMBDA
     }
 
     void Attack(ArcaneBaseEvent e)
@@ -46,5 +50,18 @@ public class Player : MonoBehaviour
     void RotatePlayer(GetQuaternionEvent e)
     {
         transform.rotation = new Quaternion(e.x, e.y, e.z, e.w);
+    }
+
+    void MovePointer(GetPointerEvent e)
+    {
+        float normalizedX = e.x / 100f;
+        float normalizedY = -e.y / 100f;
+
+        RectTransform canvasRectTransform = pointer.parent as RectTransform;
+
+        float newX = normalizedX * canvasRectTransform.rect.width;
+        float newY = normalizedY * canvasRectTransform.rect.height;
+
+        pointer.anchoredPosition = new Vector2(newX, newY);
     }
 }
