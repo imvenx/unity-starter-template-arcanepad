@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
         Debug.Log(Pad.User.name + " has attacked");
 
         // MAKE PAD VIBRATE FROM VIEW
-        Pad.Vibrate(1000);
+        // Pad.Vibrate(1000);
 
         // EMIT EVENT TO PAD FROM VIEW
         Pad.Emit(new TakeDamageEvent(3));               // TYPED

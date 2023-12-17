@@ -27,7 +27,7 @@ public class PadManager : MonoBehaviour
         AttackButton.onClick.AddListener(OnAttackButtonPress);
 
         // LISTEN FOR AN EVENT SENT TO THIS PAD
-        Arcane.Pad.On("TakeDamage", new Action<TakeDamageEvent>(TakeDamage));
+        Arcane.Msg.On("TakeDamage", new Action<TakeDamageEvent>(TakeDamage));
 
         // CALIBRATE ROTATION
         CalibrateQuaternionButton.onClick.AddListener(() => Arcane.Pad.CalibrateQuaternion());

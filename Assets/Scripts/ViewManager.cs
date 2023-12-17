@@ -39,6 +39,8 @@ public class ViewManager : MonoBehaviour
 
     void createPlayer(ArcanePad pad)
     {
+        if (string.IsNullOrEmpty(pad.IframeId)) return;
+
         GameObject newPlayer = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         Player playerComponent = newPlayer.GetComponent<Player>();
         playerComponent.Initialize(pad);
