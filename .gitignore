@@ -1,6 +1,8 @@
 *.log
 *.dwlt
 
+/exports
+
 # Unity generated folders
 [Tt]emp/
 [Oo]bj/
