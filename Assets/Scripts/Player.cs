@@ -2,6 +2,7 @@ using System;
 using ArcanepadExample;
 using ArcanepadSDK;
 using ArcanepadSDK.Models;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
 
         Pad.StartGetQuaternion();
         Pad.OnGetQuaternion(new Action<GetQuaternionEvent>(RotatePlayer));
+        // pad.StopGetQuaternion() // STOP
 
         GameObject pointerObject = GameObject.Find("Pointer");
         pointer = pointerObject.GetComponent<RectTransform>();
@@ -33,10 +35,19 @@ public class Player : MonoBehaviour
         Pad.StartGetPointer();
         Pad.OnGetPointer(new Action<GetPointerEvent>(MovePointer));                 // FUNCTION
         // Pad.OnGetPointer((GetPointerEvent e) => Debug.Log(e.x + " | " + e.y));   // LAMBDA
+        // Pad.StopGetPointer(); // STOP
+
+        // GET LINEAR ACCELERATION
+        // Pad.StartGetLinearAcceleration();
+        // Pad.OnGetLinearAcceleration((GetLinearAccelerationEvent e) => { Debug.Log("Linear Acceleration: " + JsonConvert.SerializeObject(e)); });
+        // Pad.OnGetLinearAcceleration(new Action<GetLinearAccelerationEvent>(OnGetLinearAcceleration)); // FUNCTION
+        // Pad.StopGetLinearAcceleration() // STOP
     }
 
     void Attack(ArcaneBaseEvent e)
     {
+        if (ViewManager.isGamePaused) return;
+
         Debug.Log(Pad.User.name + " has attacked");
 
         // MAKE PAD VIBRATE FROM VIEW
@@ -49,11 +60,15 @@ public class Player : MonoBehaviour
 
     void RotatePlayer(GetQuaternionEvent e)
     {
+        if (ViewManager.isGamePaused) return;
+
         transform.rotation = new Quaternion(e.x, e.y, e.z, e.w);
     }
 
     void MovePointer(GetPointerEvent e)
     {
+        if (ViewManager.isGamePaused) return;
+
         float normalizedX = e.x / 100f;
         float normalizedY = -e.y / 100f;
 

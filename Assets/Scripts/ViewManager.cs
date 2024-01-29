@@ -9,6 +9,8 @@ public class ViewManager : MonoBehaviour
     public GameObject playerPrefab;
     public List<Player> players = new List<Player>();
     public bool gameStarted { get; private set; }
+    public static bool isGamePaused = false;
+    public GameObject pausePanel;
 
     async void Awake()
     {
@@ -26,6 +28,9 @@ public class ViewManager : MonoBehaviour
 
         // DESTROY PLAYER ON GAMEPAD DISCONNECT
         Arcane.Msg.On(AEventName.IframePadDisconnect, new Action<IframePadDisconnectEvent>(destroyPlayer));
+
+        Arcane.Msg.On(AEventName.PauseApp, new Action<PauseAppEvent>(pauseApp));
+        Arcane.Msg.On(AEventName.ResumeApp, new Action<ResumeAppEvent>(resumeApp));
     }
 
     void createPlayerIfDontExist(IframePadConnectEvent e)
@@ -57,6 +62,21 @@ public class ViewManager : MonoBehaviour
         player.Pad.Dispose();
         players.Remove(player);
         Destroy(player.gameObject);
+    }
+
+
+    void pauseApp(PauseAppEvent e)
+    {
+        Debug.Log("pause");
+        isGamePaused = true;
+        pausePanel.SetActive(true);
+    }
+
+    void resumeApp(ResumeAppEvent e)
+    {
+        Debug.Log("resume");
+        isGamePaused = false;
+        pausePanel.SetActive(false);
     }
 
 }
